@@ -1,10 +1,12 @@
 import sqlite3
 from flask import *
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import db
-import config
+import secrets
+import users
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
 # main page
 
@@ -18,11 +20,8 @@ def mainapge():
 
 # user
 
-# could add password checking feature 
-# ie password has to be at least n chracters long...
-
 @app.route("/register", methods=["GET", "POST"])
-def register():  # вроде работает
+def register():
     if request.method == "GET":
         return render_template("register.html", filled={})
 
@@ -32,6 +31,9 @@ def register():  # вроде работает
             abort(403)
         password1 = request.form["password1"]
         password2 = request.form["password2"]
+
+        # could add password checking feature 
+        # ie password has to be at least n chracters long...
 
         if password1 != password2:
             flash("VIRHE: Antamasi salasanat eivät ole samat")
@@ -50,9 +52,29 @@ def register():  # вроде работает
             filled = {"username": username}
             return render_template("register.html", filled=filled)
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    pass
+    if request.method == "GET":
+        return render_template("login.html", next_page=request.referrer)
 
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        #next_page = request.form["next_page"] # doesnt work???
+        next_page = "/"
 
+        user_id = users.check_login(username, password)
 
+        if user_id:
+            session["user_id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
+            return redirect(next_page)
+        
+        else:
+            flash("VIRHE: Väärä tunnus tai salasana")
+            return render_template("login.html", next_page=next_page)
+
+@app.route("/logout") # doesnt work?
+def logout():
+    del session["username"]
+    return redirect("/")

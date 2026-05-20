@@ -3,31 +3,38 @@
 
 <link rel="stylesheet" href="/static/main.css">
 
+{% if next_page %}
+<input type="hidden" name="next_page" value="{{ next_page }}" />
+{% else %}
+<input type="hidden" name="next_page" value="/" />
+{% endif %}
+
+
 <head>
   <title>Kirjautuminen</title>
 </head>
 
 <body>
-  {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }}
-  </p>
-  <p>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
+
+  {% if session.username %}  <!-- doesnt work???? -->
+  <p> Olet kirjautunut nimellä {{ session.username }} </p>
+  <p> <a href="/logout">Kirjaudu ulos</a> </p>
+
   {% else %}
   <form action="/login" method="post">
     <p>
       Tunnus: <br />
       <input type="text" name="username" />
     </p>
+
     <p>
       Salasana: <br />
       <input type="password" name="password" />
     </p>
+
     <input type="submit" value="Kirjaudu" />
   </form>
   {% endif %}
-</body>
 
+</body>
 </html>
