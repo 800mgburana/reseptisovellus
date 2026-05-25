@@ -4,11 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import db
 import secrets
 import users
+import rcps
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
-# main page
+# pages
 
 @app.route("/")
 def mainapge():
@@ -17,10 +18,18 @@ def mainapge():
     visit_ammount = (db.query("SELECT COUNT(*) FROM visits"))[0][0]
     last_visit = db.query("SELECT visited_at FROM visits ORDER BY visited_at DESC LIMIT 1")[0][0]
 
-    recipes = db.query("SELECT title, ingredients, instructions FROM recipes")
-
+    recipes = rcps.get_recipes()
+    print("mau")
+    print(recipes)
     return render_template("mainpage.html", visits = visit_ammount, date = last_visit,
                            recipes = recipes, n = len(recipes))
+
+@app.route("/recipe/<int:recipe_id>")
+def show_recipe(recipe_id):
+    recipe = rcps.get_recipe(recipe_id)
+    return render_template("recipe.html", recipe=recipe)
+
+# recipes to be dispalyed in new to old order
 
 # user
 
@@ -97,6 +106,19 @@ def send():
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
 
-    db.execute("INSERT INTO recipes(title, ingredients, instructions) VALUES(?, ?, ?)",
-               [title, ingredients, instructions])
+    db.execute("""INSERT INTO recipes(title, ingredients, instructions, status, date) 
+               VALUES(?, ?, ?, 1, datetime('now'))""",
+               [title, ingredients, instructions]) # добавить кто постил 
+                                                   # -> можно будет менять и удалять посты
     return redirect("/")
+
+# to add
+# delete posts 
+# edit posts 
+# date of post 
+# creator
+# main page contaisn just titles, full recipes at their own pages
+
+@app.route("/mole")
+def mole():
+    return render_template("mole.html")

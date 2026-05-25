@@ -3,6 +3,8 @@
 
 <link rel="stylesheet" href="/static/main.css">
 
+{% if session.user_id %}
+
 <head>
   <title>Reseptin luominen</title>
 </head>
@@ -31,5 +33,11 @@
     
   </form>
 </body>
+
+{% else %}
+
+<p> sinun on <a href="login">kirjauduttava sisään</a>, jotta voit lisätä reseptejä.  </p>
+
+{% endif %}
 
 </html>

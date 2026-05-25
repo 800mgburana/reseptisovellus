@@ -19,6 +19,8 @@
 
             <li><a href="/login">Kirjaudu sisään</a></li>
 
+            <li><a href="/mole">myyrä</a></li>
+
             {% endif %}
         </ul>
     </nav>
@@ -27,13 +29,20 @@
         <p> tällä hetkeellä {{n}} reseptejä <br>
         sivua on ladattu {{visits}} kertaa. viimeiksi ladattu {{date}}. <br> </p>
 
+        {% if session.user_id %} 
+
         <a href="/new">uusi resepti</a> <br>  <!-- pitäis vaatia tiili --> 
 
+        {% else %}
+
+        <p> sinun on <a href="login">kirjauduttava sisään</a>, jotta voit lisätä reseptejä.  </p>
+
+        {% endif %}
         {% for recipe in recipes %}
         <p>
-            <h3>{{ recipe[0] }}</h3>
-            {{ recipe[1] }} <br> <!-- should be bullet points?-->
-            {{ recipe[2] }}
+            <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a>
+            <br />
+            postattu {{recipe.date}}
         </p>
         <hr />
         {% endfor %}
