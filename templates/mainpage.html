@@ -20,9 +20,6 @@
             <li><a href="/login">Kirjaudu sisään</a></li>
 
             {% endif %}
-
-            <li><a href="/mole">myyrä</a></li>
-
         </ul>
     </nav>
 
@@ -43,7 +40,7 @@
         {% if recipe.status == 1 %}
         <p>
             <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a> <br />
-            {{recipe.username}} ({{recipe.date}}) <br />
+            <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a>  ({{recipe.date}}) <br />
         </p>
         <hr />
         {% endif %}

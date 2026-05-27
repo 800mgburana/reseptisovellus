@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" href="/static/main.css">
+
+    <head>
+        <title> Käyttäjä {{user.username}} </title>
+    </head>
+
+    <body>
+        <h1> Käyttäjä {{user.username}} </h1>
+    
+        {% if user.has_image %}
+        <img src="/user/image/{{ user.id }}"/>
+        {% endif %}
+
+        {% if user.id == session.user_id %}
+        <p>
+            <a href="/add_image"> lisää profiilikuva </a>
+        </p>
+        {% endif %}
+
+        {% set n = recipes | count %}
+
+        {% if n == 1 %}
+
+        <p>
+            käyttäjä on postannut {{ n }} reseptin
+        </p>
+
+        {% else %}
+
+        <p>
+            käyttäjä on postannut {{ n }} reseptiä 
+        </p>
+
+        {% endif %}
+
+        {% for recipe in recipes %}
+            <li> <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a> </li>
+        {% endfor %}
+    </body>
+
+</html>

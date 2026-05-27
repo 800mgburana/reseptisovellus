@@ -9,6 +9,10 @@ import rcps
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
 # pages
 
 @app.route("/")
@@ -22,10 +26,31 @@ def mainapge():
     return render_template("mainpage.html", visits = visit_ammount, date = last_visit,
                             recipes = recipes)
 
-@app.route("/recipe/<int:recipe_id>") # update recipe.html
+@app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
     return render_template("recipe.html", recipe=recipe)
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+
+    if not user:
+        abort(404)
+
+    recipes = users.get_recipes(user_id)
+
+    return render_template("user.html", user=user, recipes=recipes)
+
+@app.route("/user/image/<int:user_id>")
+def show_user_image(user_id):
+    image = users.get_image(user_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
 
 # user actions
 
@@ -89,13 +114,33 @@ def logout():
     flash("Olet kirjautunut ulos.")
     return redirect("/")
 
+@app.route("/add_image", methods=["GET", "POST"])
+def add_image():
+    require_login()
+
+    if request.method == "GET":
+        return render_template("add_image.html")
+    
+    if request.method == "POST":
+        file = request.files["image"]
+        if not file.filename.endswith(".jpg"):
+            return "VIRHE: väärä tiedostomuoto"
+        
+        image = file.read()
+        if len(image) > 100*1024:
+            return "VIRHE: liian suuri kuva"
+        
+        user_id = session["user_id"]
+        users.update_image(user_id, image)
+        return redirect("/user/" + str(user_id))
+
 # post actions
 
 @app.route("/new")
 def new():
     return render_template("new.html")
 
-@app.route("/send", methods=["POST"]) # add poster
+@app.route("/send", methods=["POST"])
 def send():
     user_id = session["user_id"]
     title = request.form["title"]
@@ -147,12 +192,8 @@ def delete_recipe(recipe_id):
             return redirect("/recipe/" + str(recipe_id))
 
 # to add
-# rights
 # recipe picture
-# users picture???
-# user pages
 # search
-# update users table (id)
 
 @app.route("/mole")
 def mole():

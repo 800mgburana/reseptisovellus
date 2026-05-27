@@ -2,7 +2,7 @@ import db
 from flask import redirect
 
 def get_recipes():
-    sql = """SELECT r.id, r.title, r.date, r.status, u.username
+    sql = """SELECT r.id, r.title, r.date, r.status, u.username, r.user_id
              FROM recipes r, users u
              WHERE r.user_id = u.id
              ORDER BY r.id DESC"""
