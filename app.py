@@ -29,7 +29,8 @@ def mainapge():
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
-    return render_template("recipe.html", recipe=recipe)
+    tags = rcps.get_tags(recipe_id)
+    return render_template("recipe.html", recipe=recipe, tags=tags)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -147,11 +148,9 @@ def send():
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
 
-    print(user_id)
-    db.execute("""INSERT INTO recipes
-               (title, ingredients, instructions, status, date, user_id) 
-               VALUES(?, ?, ?, 1, datetime('now'), ?)""",
-               [title, ingredients, instructions, user_id]) 
+    tags = request.form.getlist("tags")
+
+    rcps.new_post(title, ingredients, instructions, user_id, tags)
                                                    
     return redirect("/")
 

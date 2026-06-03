@@ -14,6 +14,10 @@
     <body>
     <h2>{{ recipe.title }}</h2>
 
+    {% for tag in tags %}
+    <i>{{tag.name}}</i>  
+    {% endfor %}
+
     <h4> ainesosat </h4>
     {% set list = recipe.ingredients.split(',') %}
     {% for ingredient in list %} 

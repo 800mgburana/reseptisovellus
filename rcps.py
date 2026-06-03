@@ -41,3 +41,23 @@ def search(query):
              ORDER BY r.date DESC"""
     
     return db.query(sql, ["%" + query + "%"])
+
+def new_post(title, ingredients, instructions, user_id, tags):
+    sql = """INSERT INTO recipes(title, ingredients, instructions, status, date, user_id) 
+             VALUES(?, ?, ?, 1, datetime('now'), ?)""" # это поменять чтоыб едфолт 1 был?
+    db.execute(sql, [title, ingredients, instructions, user_id]) 
+    
+    recipe_id = db.last_insert_id()
+
+    for tag in tags:
+        tag_id = db.query("SELECT id FROM tags WHERE name = ?", [tag])[0][-1]
+        print("recipe id =", recipe_id, "tag_id =", tag_id)
+        db.execute("INSERT INTO recipe_tags(recipe_id, tag_id) VALUES(?, ?)", [recipe_id, tag_id])
+
+def get_tags(recipe_id):
+    sql = """SELECT t.name
+             FROM recipe_tags rt, tags t
+             WHERE rt.recipe_id = ?
+             AND rt.tag_id = t.id"""
+    
+    return db.query(sql, [recipe_id])
