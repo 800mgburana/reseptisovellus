@@ -29,3 +29,12 @@ CREATE TABLE recipe_tags(
     recipe_id INTEGER REFERENCES recipes,
     tag_id INTEGER REFERENCES tags
 );
+
+CREATE TABLE comments(
+    id INTEGER PRIMARY KEY,
+    content TEXT,
+    sent_at TEXT,
+    user_id INTEGER REFERENCES users,
+    recipe_id INTEGER REFERENCES recipes,
+    status INTEGER DEFAULT 1
+);

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+    <link rel="stylesheet" href="/static/main.css">
+
+    {% if session.user_id %}
+
+    <head>
+        <title> Kommenttisi: </title>
+    </head>
+
+    <body>
+        <form action="/comment/{{recipe.id}}" method="POST">
+            <p>
+                Komenttisi: <br />
+                <textarea name="comment" rows="3" cols="40"></textarea>
+            </p>
+
+            <p>
+                <input type="submit" value="Lähetä" />
+            </p>
+        </form>
+
+    </body>
+
+    {% else %}
+
+    <p> sinun on <a href="login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
+
+    {% endif %}
+
+</html>

@@ -5,39 +5,81 @@
 
     {% if recipe.status == 1 %}
 
-    {{ recipe.username }} ({{ recipe.date }})
+        {{ recipe.username }} ({{ recipe.date }})
 
-    <head>
-        <title>{{ recipe.title }}</title>
-    </head>
+        <head>
+            <title>{{ recipe.title }}</title>
+        </head>
 
-    <body>
-    <h2>{{ recipe.title }}</h2>
+        <body>
 
-    {% for tag in tags %}
-    <i>{{tag.name}}</i>  
-    {% endfor %}
+            <h2>{{ recipe.title }}</h2>
 
-    <h4> ainesosat </h4>
-    {% set list = recipe.ingredients.split(',') %}
-    {% for ingredient in list %} 
-    <li> {{ingredient}} </li> 
-    {% endfor %}
+            {% for tag in tags %}
 
-    <br>
+                <i>{{tag.name}}</i> 
 
-    <h4> ohjeet </h4>
-    {{recipe.instructions}} <br>
-    </body>
+            {% endfor %}
 
-    {% if session.user_id == recipe.user_id %}
-    <a href="/edit/{{recipe.id}}">muokkaa</a>
-    <a href="/delete/{{recipe.id}}">poista</a>
-    {% endif %}
+            <h4> ainesosat </h4>
+            {% set list = recipe.ingredients.split(',') %}
+
+            {% for ingredient in list %} 
+
+                <li> {{ingredient}} </li> 
+
+            {% endfor %}
+
+            <br />
+
+            <h4> ohjeet </h4>
+
+            {{recipe.instructions}}
+
+            <br />
+        
+        </body>
+
+        {% if session.user_id == recipe.user_id %}
+        
+            <a href="/edit/{{recipe.id}}">muokkaa</a>
+            <a href="/delete/{{recipe.id}}">poista</a>
+            <br />
+
+        {% endif %}
+
+        {% if session.user_id %}
+
+            <a href="/comment/{{recipe.id}}"> jätä kommentti </a>       
+
+        {% else %}
+
+            <p> sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
+
+        {% endif %}
+
+        <hr />
+
+        <body>
+
+            {% for comment in comments %}
+
+            {{comment.username}} ({{comment.sent_at}}) <br />
+            {{comment.content}} <br />
+
+            {% if session.user_id == recipe.user_id %}
+            <a href="/edit_comment/{{comment.id}}">muokkaa</a>  <a href="/delete_comment/{{comment.id}}">poista</a>
+            {% endif %}
+
+            <hr />
+
+            {% endfor %}
+
+        </body>
 
     {% else %}
 
-    reseptia ei löyty
+        reseptia ei löyty
 
     {% endif %}
 

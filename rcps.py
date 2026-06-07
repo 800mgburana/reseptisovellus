@@ -43,8 +43,8 @@ def search(query):
     return db.query(sql, ["%" + query + "%"])
 
 def new_post(title, ingredients, instructions, user_id, tags):
-    sql = """INSERT INTO recipes(title, ingredients, instructions, status, date, user_id) 
-             VALUES(?, ?, ?, 1, datetime('now'), ?)""" # это поменять чтоыб едфолт 1 был?
+    sql = """INSERT INTO recipes(title, ingredients, instructions, date, user_id) 
+             VALUES(?, ?, ?, datetime('now'), ?)"""
     db.execute(sql, [title, ingredients, instructions, user_id]) 
     
     recipe_id = db.last_insert_id()

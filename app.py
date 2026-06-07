@@ -5,6 +5,7 @@ import db
 import secrets
 import users
 import rcps
+import cmmnt
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -30,7 +31,9 @@ def mainapge():
 def show_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
     tags = rcps.get_tags(recipe_id)
-    return render_template("recipe.html", recipe=recipe, tags=tags)
+    comments = cmmnt.get_comments(recipe_id)
+
+    return render_template("recipe.html", recipe=recipe, tags=tags, comments=comments)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -195,6 +198,53 @@ def search():
     query = request.args.get("query")
     results = rcps.search(query) if query else []
     return render_template("search.html", query=query, results=results)
+
+# comments
+
+@app.route("/comment/<int:recipe_id>", methods=["GET", "POST"])
+def comment(recipe_id):
+    recipe = rcps.get_recipe(recipe_id)
+
+    if request.method == "GET":
+        return render_template("comment.html", recipe=recipe)
+
+    if request.method == "POST":
+        content = request.form["comment"]
+        user_id = session["user_id"] 
+
+        cmmnt.new_comment(recipe_id, user_id, content)
+        return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])   
+def edit_comment(comment_id):
+    comment = cmmnt.get_comment(comment_id)
+
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("edit_comment.html", comment=comment)
+    
+    if request.method == "POST":
+        content = request.form["comment"]
+        cmmnt.update_comment(comment["id"], content)
+        return redirect("/recipe/" + str(comment["recipe_id"]))
+
+@app.route("/delete_comment/<int:comment_id>", methods=["GET", "POST"])
+def delete_comment(comment_id):
+    comment = cmmnt.get_comment(comment_id)
+
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("delete_comment.html", comment=comment)
+    
+    if request.method == "POST":
+        if "continue" in request.form:
+            cmmnt.delete_comment(comment_id)
+
+    return redirect("/recipe/" + str(comment["recipe_id"]))
 
 #
 

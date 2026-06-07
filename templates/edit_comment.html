@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+    <link rel="stylesheet" href="/static/main.css">
+
+    <form action="/edit_comment/{{comment.id}}" method="POST">
+
+        <p>
+            Kommenttisi: <br />
+
+            <textarea name="comment" rows="3" cols="40">{{comment.content}}</textarea>
+        </p>
+
+        <input type="submit" value="Lähetä" />
+        
+    </form>
+
+</html>
