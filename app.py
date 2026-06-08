@@ -31,9 +31,14 @@ def mainapge():
 def show_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
     tags = rcps.get_tags(recipe_id)
+    likes = rcps.get_likes(recipe_id)
     comments = cmmnt.get_comments(recipe_id)
-
-    return render_template("recipe.html", recipe=recipe, tags=tags, comments=comments)
+    like_status = False
+    if "user_id" in session:
+        like_status = rcps.get_like_status(recipe_id, session["user_id"])
+    
+    return render_template("recipe.html", recipe=recipe, tags=tags,
+                           likes=likes, comments=comments, like_status=like_status)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -206,6 +211,15 @@ def search():
         flash("Liian pitkä hakusana")
 
     return render_template("search.html", query=query, tags=tags, results=results)
+
+@app.route("/like/<int:recipe_id>", methods=["POST"])
+def like(recipe_id):
+    try:
+        rcps.like(recipe_id, session["user_id"])
+
+    except:
+        flash("sinun on kirjauduttava sisään, jotta voit tykätä resepteistä.")
+    return redirect("/recipe/" + str(recipe_id))
 
 # comments
 

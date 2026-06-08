@@ -38,3 +38,9 @@ CREATE TABLE comments(
     recipe_id INTEGER REFERENCES recipes,
     status INTEGER DEFAULT 1
 );
+
+CREATE TABLE likes(
+    recipe_id INTEGER REFERENCES recipes,
+    user_id INTEGER REFERENCES users,
+    PRIMARY KEY (user_id, recipe_id)
+);

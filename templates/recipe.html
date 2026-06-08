@@ -5,7 +5,11 @@
 
     {% if recipe.status == 1 %}
 
-        {{ recipe.username }} ({{ recipe.date }})
+        {% for message in get_flashed_messages() %}
+        <i><h3>{{ message }}</h3></i>
+        {% endfor %}
+
+        <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a> ({{ recipe.date }})
 
         <head>
             <title>{{ recipe.title }}</title>
@@ -48,6 +52,19 @@
 
         {% endif %}
 
+        <hr />
+
+        <p style="text-align:left;">
+            {{likes.count}} likes
+            <span style="float:right;">
+                <form action="/like/{{recipe.id}}" method="post">
+                    <input type="submit" value="tykkää <3">
+                </form>
+            </span>
+        </p>
+
+        <hr />
+
         {% if session.user_id %}
 
             <a href="/comment/{{recipe.id}}"> jätä kommentti </a>       
@@ -64,7 +81,7 @@
 
             {% for comment in comments %}
 
-            {{comment.username}} ({{comment.sent_at}}) <br />
+             <a href="/user/{{comment.user_id}}">{{comment.username}}</a> ({{comment.sent_at}}) <br />
             {{comment.content}} <br />
 
             {% if session.user_id == recipe.user_id %}

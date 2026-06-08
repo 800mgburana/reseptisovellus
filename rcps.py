@@ -73,3 +73,21 @@ def get_tags(recipe_id):
              AND rt.tag_id = t.id"""
     
     return db.query(sql, [recipe_id])
+
+def like(recipe_id, user_id):
+    db.execute("INSERT INTO likes(user_id, recipe_id) VALUES(?, ?)",
+                   [user_id, recipe_id])
+
+def get_likes(recipe_id):
+    sql = """SELECT COUNT(recipe_id) AS count
+             FROM likes
+             WHERE recipe_id = ?"""
+    
+    return db.query(sql, [recipe_id])[0]
+
+def get_like_status(recipe_id, user_id):
+    sql = """SELECT COUNT(user_id) AS count
+             FROM likes
+             WHERE recipe_id = ? AND user_id = ?"""
+    
+    return db.query(sql, [recipe_id, user_id])[0]
