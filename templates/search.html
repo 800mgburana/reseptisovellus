@@ -9,20 +9,39 @@
     <body>
         <h1> haku </h1>
 
+        {% for message in get_flashed_messages() %}
+        <i><h3>{{ message }}</h3></i>
+        {% endfor %}
+
         <form action="/search" method="get">
             <p>
                 hakusana:
                 {% if query %}
-                <input type="text" name="query" value="{{ query }}"/>
+                <input type="text" name="query" value="{{query}}" maxlength="100" required/>
                 {% else %}
                 <input type="text" name="query"/>
                 {% endif %}
+            </p>
+
+            <p>
+                sisältää tagit: <br />
+                    <input type="checkbox" name="tags" value="vegetaarinen"
+                    {% if "vegetaarinen" in tags %} checked {% endif %}/> vegetaarinen
+
+                    <input type="checkbox" name="tags" value="vegaaninen"
+                    {% if "vegaaninen" in tags %} checked {% endif %}/> vegaaninen
+
+                    <input type="checkbox" name="tags" value="laktoositon"
+                    {% if "laktoositon" in tags %} checked {% endif %}/> laktoositon
+
+                    <input type="checkbox" name="tags" value="gluteeniton"
+                    {% if "gluteeniton" in tags %} checked {% endif %}/> gluteeniton
             </p>
             <input type="submit" value="hae"/>
         </form>
 
 
-        {% if query %}
+        {% if query or tags %}
         <hr />
         <h2> tulokset </h2>
 
@@ -30,7 +49,7 @@
             {% for result in results %}
             <li>
                 <a href="/recipe/{{result.recipe_id}}">
-                    {{ result.title}}
+                    {{result.title}}
                 </a>
                 <br />
                 {{result.username}} ({{ result.date }})

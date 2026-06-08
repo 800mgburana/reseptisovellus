@@ -33,14 +33,26 @@ def delete_recipe(recipe_id):
     
     db.execute(sql, [recipe_id])
 
-def search(query):
-    sql = """SELECT r.id recipe_id, r.title, r.ingredients,
-                    r.date, u.username
+def search(query, tags):
+    sql = """SELECT r.id as recipe_id, r.title, 
+             r.ingredients, r.date, u.username
              FROM recipes r, users u
-             WHERE r.user_id = u.id AND r.title LIKE ?
-             ORDER BY r.date DESC"""
-    
-    return db.query(sql, ["%" + query + "%"])
+             WHERE r.user_id = u.id
+             AND r.title LIKE ?"""
+    params = ["%" + query + "%"]
+
+    if tags:
+        placeholders = ",".join("?" for tag in tags)
+        sql += f""" AND r.id IN(
+                    SELECT rt.recipe_id 
+                    FROM recipe_tags rt, tags t
+                    WHERE rt.tag_id = t.id 
+                    AND t.name IN ({placeholders})) """
+        params.extend(tags)
+
+    sql += " ORDER BY r.date DESC"
+
+    return db.query(sql, params)
 
 def new_post(title, ingredients, instructions, user_id, tags):
     sql = """INSERT INTO recipes(title, ingredients, instructions, date, user_id) 

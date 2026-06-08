@@ -24,8 +24,8 @@ def mainapge():
     last_visit = db.query("SELECT visited_at FROM visits ORDER BY visited_at DESC LIMIT 1")[0][0]
 
     recipes = rcps.get_recipes()
-    return render_template("mainpage.html", visits = visit_ammount, date = last_visit,
-                            recipes = recipes)
+    return render_template("mainpage.html", visits = visit_ammount, 
+                            date = last_visit, recipes = recipes)
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
@@ -70,9 +70,6 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
 
-        # could add password checking feature 
-        # ie password has to be at least n chracters long...
-
         if password1 != password2:
             flash("VIRHE: Antamasi salasanat eivät ole samat")
             filled = {"username": username}
@@ -114,6 +111,8 @@ def login():
 
 @app.route("/logout")
 def logout():
+    require_login()
+
     del session["user_id"]
     flash("Olet kirjautunut ulos.")
     return redirect("/")
@@ -140,22 +139,23 @@ def add_image():
 
 # post actions
 
-@app.route("/new")
+@app.route("/new", methods = ["GET", "POST"])
 def new():
-    return render_template("new.html")
+    require_login()
 
-@app.route("/send", methods=["POST"])
-def send():
-    user_id = session["user_id"]
-    title = request.form["title"]
-    ingredients = request.form["ingredients"]
-    instructions = request.form["instructions"]
+    if request.method == "GET":
+        return render_template("new.html")
+    
+    if request.method == "POST":
+        user_id = session["user_id"]
+        title = request.form["title"]
+        ingredients = request.form["ingredients"]
+        instructions = request.form["instructions"]
+        tags = request.form.getlist("tags")
 
-    tags = request.form.getlist("tags")
-
-    rcps.new_post(title, ingredients, instructions, user_id, tags)
-                                                   
-    return redirect("/")
+        rcps.new_post(title, ingredients, instructions, user_id, tags)       
+        recipe_id = str(db.last_insert_id())                                    
+        return redirect("/recipe/" + recipe_id)
 
 @app.route("/edit/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
@@ -196,8 +196,16 @@ def delete_recipe(recipe_id):
 @app.route("/search")
 def search():
     query = request.args.get("query")
-    results = rcps.search(query) if query else []
-    return render_template("search.html", query=query, results=results)
+    tags = request.args.getlist("tags")
+    results = rcps.search(query, tags) if query else []
+
+    if tags and not query:
+        flash("Anna hakusana")
+
+    if query and len(query) > 50:
+        flash("Liian pitkä hakusana")
+
+    return render_template("search.html", query=query, tags=tags, results=results)
 
 # comments
 
