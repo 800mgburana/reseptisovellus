@@ -17,14 +17,17 @@
 
         <body>
 
-            <h2>{{ recipe.title }}</h2>
+            <div><h2>{{ recipe.title }}</h2></div>
 
+            <p>
             {% for tag in tags %}
 
                 <i>{{tag.name}}</i> 
 
             {% endfor %}
+            </p>
 
+            <div>
             <h4> ainesosat </h4>
             {% set list = recipe.ingredients.split(',') %}
 
@@ -33,13 +36,13 @@
                 <li> {{ingredient}} </li> 
 
             {% endfor %}
-
+            </div>
             <br />
 
             <h4> ohjeet </h4>
-
+            <div>
             {{recipe.instructions}}
-
+            </div>
             <br />
         
         </body>

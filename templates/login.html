@@ -16,8 +16,12 @@
 
 <body>
 
-  {% if session.username %}  <!-- doesnt work???? -->
-  <p> Olet kirjautunut nimellä {{ session.username }} </p>
+  {% for message in get_flashed_messages() %}
+  <i><h3>{{ message }}</h3></i>
+  {% endfor %}
+
+  {% if session.user_id %}  
+  <p> Olet kirjautunut sisään. </p>
   <p> <a href="/logout">Kirjaudu ulos</a> </p>
 
   {% else %}

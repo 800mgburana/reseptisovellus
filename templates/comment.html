@@ -13,9 +13,10 @@
         <form action="/comment/{{recipe.id}}" method="POST">
             <p>
                 Komenttisi: <br />
-                <textarea name="comment" rows="3" cols="40"></textarea>
+                <textarea name="comment" rows="3" cols="40" maxlength="300" required></textarea>
             </p>
 
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
             <p>
                 <input type="submit" value="Lähetä" />
             </p>

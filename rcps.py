@@ -1,13 +1,21 @@
 import db
 from flask import redirect
 
-def get_recipes():
+def recipe_count():
+    sql = """SELECT COUNT(id) as count
+             FROM recipes WHERE status = 1"""
+    return db.query(sql)[0]["count"]
+
+def get_recipes(page, page_size):
     sql = """SELECT r.id, r.title, r.date, r.status, u.username, r.user_id
              FROM recipes r, users u
              WHERE r.user_id = u.id
-             ORDER BY r.id DESC"""
-    
-    return db.query(sql)
+             ORDER BY r.date DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page-1)
+
+    return db.query(sql, [limit, offset])
 
 def get_recipe(recipe_id):
     sql = """SELECT r.id, r.title, r.ingredients, r.instructions, 

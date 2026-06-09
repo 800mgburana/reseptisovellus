@@ -9,6 +9,7 @@
             haluatko varmasti poistaa kommentisi? :C
         </p>
 
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
     <input type="submit" name="continue" value="jatkaa"/>
     <input type="submit" name="cancel" value="peruuta"/>
 

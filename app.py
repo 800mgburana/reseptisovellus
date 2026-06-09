@@ -6,6 +6,7 @@ import secrets
 import users
 import rcps
 import cmmnt
+import math
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -14,31 +15,48 @@ def require_login():
     if "user_id" not in session:
         abort(403)
 
+def check_csrf():
+    if request.form["csrf_token"] != session ["csrf_token"]:
+        abort(403)
+
 # pages
 
 @app.route("/")
-def mainapge():
-    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
+@app.route("/<int:page>")
+def mainpage(page=1):
+    page_size = 10
+    recipe_count = rcps.recipe_count()
+    page_count = math.ceil(recipe_count/page_size)
+    page_count = max(page_count, 1)
 
+    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
     visit_ammount = (db.query("SELECT COUNT(*) FROM visits"))[0][0]
     last_visit = db.query("SELECT visited_at FROM visits ORDER BY visited_at DESC LIMIT 1")[0][0]
 
-    recipes = rcps.get_recipes()
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count["count"]))
+    
+    recipes = rcps.get_recipes(page, page_size)
     return render_template("mainpage.html", visits = visit_ammount, 
-                            date = last_visit, recipes = recipes)
+                            date = last_visit, recipes = recipes,
+                            page=page, page_count=page_count)
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
-    recipe = rcps.get_recipe(recipe_id)
+    try:
+        recipe = rcps.get_recipe(recipe_id)
+
+    except:
+        abort(404)
+        
     tags = rcps.get_tags(recipe_id)
     likes = rcps.get_likes(recipe_id)
     comments = cmmnt.get_comments(recipe_id)
-    like_status = False
-    if "user_id" in session:
-        like_status = rcps.get_like_status(recipe_id, session["user_id"])
     
     return render_template("recipe.html", recipe=recipe, tags=tags,
-                           likes=likes, comments=comments, like_status=like_status)
+                            likes=likes, comments=comments)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -130,6 +148,7 @@ def add_image():
         return render_template("add_image.html")
     
     if request.method == "POST":
+        check_csrf()
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
             return "VIRHE: väärä tiedostomuoto"
@@ -149,8 +168,10 @@ def new():
     require_login()
 
     if request.method == "GET":
-        return render_template("new.html")
+        return render_template("new.html", session=session)
     
+    check_csrf()
+
     if request.method == "POST":
         user_id = session["user_id"]
         title = request.form["title"]
@@ -158,21 +179,30 @@ def new():
         instructions = request.form["instructions"]
         tags = request.form.getlist("tags")
 
-        rcps.new_post(title, ingredients, instructions, user_id, tags)       
-        recipe_id = str(db.last_insert_id())                                    
+        if len(title) > 50 or len(ingredients) > 200 or len(ingredients) > 1000:
+            abort(403)
+
+        try:
+            rcps.new_post(title, ingredients, instructions, user_id, tags)  
+            recipe_id = str(db.last_insert_id())     
+        
+        except sqlite3.IntegrityError:
+            abort(403)
+                                    
         return redirect("/recipe/" + recipe_id)
 
 @app.route("/edit/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
 
-    if recipe["user_id"] != session["user_id"]:
+    if not recipe or recipe["user_id"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":
         return render_template("edit.html", recipe=recipe)
 
     if request.method == "POST":
+        check_csrf()
         title = request.form["title"]
         ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
@@ -184,13 +214,14 @@ def edit_recipe(recipe_id):
 def delete_recipe(recipe_id):
     recipe = rcps.get_recipe(recipe_id)
 
-    if recipe["user_id"] != session["user_id"]:
+    if not recipe or recipe["user_id"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":
         return render_template("delete.html", recipe=recipe)
     
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             rcps.delete_recipe(recipe_id)
             return redirect("/")
@@ -225,14 +256,20 @@ def like(recipe_id):
 
 @app.route("/comment/<int:recipe_id>", methods=["GET", "POST"])
 def comment(recipe_id):
+    require_login()
     recipe = rcps.get_recipe(recipe_id)
 
     if request.method == "GET":
         return render_template("comment.html", recipe=recipe)
 
+    check_csrf()
+
     if request.method == "POST":
         content = request.form["comment"]
         user_id = session["user_id"] 
+
+        if len(content) > 300:
+            abort(403)
 
         cmmnt.new_comment(recipe_id, user_id, content)
         return redirect("/recipe/" + str(recipe_id))
@@ -241,14 +278,18 @@ def comment(recipe_id):
 def edit_comment(comment_id):
     comment = cmmnt.get_comment(comment_id)
 
-    if comment["user_id"] != session["user_id"]:
+    if not comment or comment["user_id"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":
         return render_template("edit_comment.html", comment=comment)
     
     if request.method == "POST":
+        check_csrf()
         content = request.form["comment"]
+        if len(content) > 300:
+            abort(403)
+
         cmmnt.update_comment(comment["id"], content)
         return redirect("/recipe/" + str(comment["recipe_id"]))
 
@@ -256,13 +297,14 @@ def edit_comment(comment_id):
 def delete_comment(comment_id):
     comment = cmmnt.get_comment(comment_id)
 
-    if comment["user_id"] != session["user_id"]:
+    if not comment or comment["user_id"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":
         return render_template("delete_comment.html", comment=comment)
     
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             cmmnt.delete_comment(comment_id)
 

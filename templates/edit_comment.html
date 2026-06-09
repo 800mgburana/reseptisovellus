@@ -8,9 +8,10 @@
         <p>
             Kommenttisi: <br />
 
-            <textarea name="comment" rows="3" cols="40">{{comment.content}}</textarea>
+            <textarea name="comment" rows="3" cols="40" maxlength="300">{{comment.content}}</textarea>
         </p>
 
+        <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
         <input type="submit" value="Lähetä" />
         
     </form>
