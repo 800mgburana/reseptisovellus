@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html>
 
-<link rel="stylesheet" href="/static/main.css">
-
     <head>
+        <link rel="stylesheet" href="/static/main.css">
         <title> Käyttäjä {{user.username}} </title>
     </head>
 
     <body>
-        <h1> Käyttäjä {{user.username}} </h1>
-    
-        {% if user.has_image %}
-        <img src="/user/image/{{ user.id }}"/>
-        {% endif %}
+        <header class="recipe-header">
+        </header>
 
-        {% if user.id == session.user_id %}
-        <p>
-            <a href="/add_image"> lisää profiilikuva </a>
-        </p>
-        {% endif %}
+        <main class="main-recipe">
+            <h1> Käyttäjä {{user.username}} </h1>
+        
+            {% if user.has_image %}
+                <img class="user-profile-picutre" src="/user/image/{{ user.id }}"/>
+            {% endif %}
 
-        {% set n = recipes | count %}
+            {% if user.id == session.user_id %}
+                <p>
+                    <a href="/add_image">Lisää profiilikuva</a>
+                </p>
+            {% endif %}
 
-        {% if n == 1 %}
+            {% set n = recipes | count %}
 
-        <p>
-            käyttäjä on postannut {{ n }} reseptin
-        </p>
+            {% if n == 1 %}
+                <p>
+                    Käyttäjä on postannut {{ n }} reseptin.
+                </p>
+            {% else %}
+                <p>
+                    Käyttäjä on postannut {{ n }} reseptiä.
+                </p>
+            {% endif %}
 
-        {% else %}
+            {% for recipe in recipes %}
+                <li> <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a> </li>
+            {% endfor %}
+        </main>
 
-        <p>
-            käyttäjä on postannut {{ n }} reseptiä 
-        </p>
-
-        {% endif %}
-
-        {% for recipe in recipes %}
-            <li> <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a> </li>
-        {% endfor %}
+        <span class="main-footer">
+            <footer class="form-footer">
+            </footer>
+        </span>
     </body>
-
 </html>

@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html>
 
-<link rel="stylesheet" href="/static/main.css">
+  <head>
+    <link rel="stylesheet" href="/static/main.css">
+    <title>Kirjautuminen</title>
+  </head>
 
-{% if next_page %}
-<input type="hidden" name="next_page" value="{{ next_page }}" />
-{% else %}
-<input type="hidden" name="next_page" value="/" />
-{% endif %}
+  <body>
 
+    <header class="form-header">
+      <h1 class="form-title">Kirjautuminen</h1>
+    </header>
 
-<head>
-  <title>Kirjautuminen</title>
-</head>
+    {% for message in get_flashed_messages() %}
+      <span class="flash-message">
+        <div class="form-flash-message">
+          <em>
+            {{ message }}
+          </em>
+        </div>
+      </span>
+    {% endfor %}
 
-<body>
+    {% if session.user_id %}
+  
+      <p class="login-form"> 
+        <br>
+        Olet kirjautunut sisään. <a href="/logout">Kirjaudu ulos</a> 
+      </p>
 
-  {% for message in get_flashed_messages() %}
-  <i><h3>{{ message }}</h3></i>
-  {% endfor %}
+    {% else %}
 
-  {% if session.user_id %}  
-  <p> Olet kirjautunut sisään. </p>
-  <p> <a href="/logout">Kirjaudu ulos</a> </p>
+      <p class="login-tip"> Jos sinulla ei vielä ole tiliä, voit luoda sen <a href="/register">täällä</a> </p>
+    
+      <form class="login-form" action="/login" method="post">
+        <p>
+          <label for="username">Tunnus:</label> <br>
+          <input type="text" name="username" />
+        </p>
 
-  {% else %}
+        <p>
+          <label for="password">Salasana:</label> <br>
+          <input type="password" name="password" />
+        </p>
 
-  <p> Jos sinulla ei vielä ole tiliä, voit luoda sen <a href="/register">täällä</a> </p>
+        <input type="submit" value="Kirjaudu" />
+      </form>
 
-  <form action="/login" method="post">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
+    {% endif %}
 
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
+    <span class="main-footer">
+      <footer class="form-footer">
+      </footer>
+    </span>
 
-    <input type="submit" value="Kirjaudu" />
-  </form>
-  {% endif %}
-
-</body>
+  </body>
 </html>

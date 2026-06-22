@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="/static/main.css">
+    <head>
+        <link rel="stylesheet" href="/static/main.css">
+        <title>Kommentin muoakkaus</title>
+    </head>
 
-    <form action="/edit_comment/{{comment.id}}" method="POST">
+    <body>
 
-        <p>
-            Kommenttisi: <br />
+        <header class="form-header">
+                <h1 class="form-title"> Komentin muoakkaus </h1>
+        </header>
 
-            <textarea name="comment" rows="3" cols="40" maxlength="300">{{comment.content}}</textarea>
-        </p>
+        <form class="search-form" action="/edit_comment/{{comment.id}}" method="POST">
+            <p>
+                <label for="comment">Kommenttisi:</label> <br>
+                <textarea name="comment" rows="3" cols="40" maxlength="300">{{comment.content}}</textarea>            
+            </p>
 
-        <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-        <input type="submit" value="Lähetä" />
-        
-    </form>
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
 
+            <p>
+                <input type="submit" value="Lähetä" />
+            </p>
+        </form>
+
+        <span class="main-footer">
+            <footer class="form-footer">
+            </footer>
+        </span>
+    </body>
 </html>

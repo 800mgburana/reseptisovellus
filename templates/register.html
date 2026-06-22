@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html>
 
-<link rel="stylesheet" href="/static/main.css">
+  <head>
+    <link rel="stylesheet" href="/static/main.css">
+    <title>Rekisteröinti</title>
+  </head>
 
-<head>
-  <h3>Rekisteröinti</h3>
-</head>
+  <body>
 
-<body>
+    <header class="form-header">
+      <h1 class="form-title">Rekisteröinti</h1>
+    </header>
 
-  {% for mesg in get_flashed_messages() %}
-  <h1>{{ mesg }}</h1>
-  {% endfor %}
+    {% for message in get_flashed_messages() %}
+      <span class="flash-message">
+        <div class="form-flash-message">
+          <em>
+            {{ message }}
+          </em>
+        </div>
+      </span>
+    {% endfor %}
 
-  <form action="/register" method="post">
+    <form class="registration-form" action="/register" method="post">
+      <p>
+        <label for="username">Tunnus:</label><br>
+        <input type="text" name="username" value="{{ filled.username }}" maxlength="16" required/>
+      </p>
 
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" value="{{ filled.username }}" maxlength="16" required/>
-    </p>
+      <p>
+        <label for="password1">Salasana:</label><br>
+        <input type="password" name="password1" required/>
+      </p>
 
-    <p>
-      Salasana: <br />
-      <input type="password" name="password1" required/>
-    </p>
+      <p>
+        <label for="password2">Salasana uudestaan:</label><br>
+        <input type="password" name="password2" required/>
+      </p>
 
-    <p>
-      Salasana uudestaan: <br />
-      <input type="password" name="password2" required/>
-    </p>
+      <p>
+        <input type="submit" value="Luo tunnus"/>
+      </p>
+    </form>
 
-    <input type="submit" value="Luo tunnus" />
+    <span class="main-footer">
+      <footer class="form-footer">
+      </footer>
+    </span>
 
-  </form>
-
-</body>
-
+  </body>
 </html>

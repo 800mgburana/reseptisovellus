@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="/static/main.css">
-
     <head>
+        <link rel="stylesheet" href="/static/main.css">
         <title> lisää profiilikuva </title>
     </head>
 
     <body>
-        <h1> lisää profiilikuva </h1>
+        <header class="form-header">
+            <h1 class="form-title">Lisää profiilikuva</h1>
+        </header>
     
-        <p> lähetä jpg-tiedosto, jonka koko on enitään 100kt </p>
+        <p class="login-tip">Lähetä jpg-tiedosto, jonka koko on enitään 100kt.</p>
 
-        <form action="/add_image" method="post" enctype="multipart/form-data">
+        <form class="registration-form" action="/add_image" method="post" enctype="multipart/form-data">
             <p>
-                kuva: <input type="file" name="image" accept=".jpg"/>
+                <label for="image"> Kuva: </label>
+                <input type="file" name="image" accept=".jpg"/>
             </p>
         
             <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-            <input type="submit" value="lähetä"/>
+            <input type="submit" value="Lähetä"/>
         </form>
+
+        <span class="main-footer">
+            <footer class="form-footer">
+            </footer>
+        </span>
     </body>
 
 </html>

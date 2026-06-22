@@ -1,56 +1,106 @@
 <!DOCTYPE html>
 <html>
 
-  <link rel="stylesheet" href="/static/main.css">
-
-    <h1> reseptit! </h1>
-
-    {% for message in get_flashed_messages() %}
-    <i><h3>{{ message }}</h3></i>
-    {% endfor %}
-
-    <nav>
-        <ul>
-            <li><a href="/register">Luo tunnus</a></li>
-
-            {% if session.user_id %}
-            <li><a href="/logout">Kirjaudu ulos</a></li> 
-            {% else %}
-            <li><a href="/login">Kirjaudu sisään</a></li>
-            {% endif %}
-
-            <li><a href="/search">haku</a></li>
-        </ul>
-    </nav>
+    <head>
+        <link rel="stylesheet" href="/static/main.css">
+        <title>Reseptisovellus</title>
+    </head>
 
     <body> 
-        <p> sivua on ladattu {{visits}} kertaa. viimeiksi ladattu {{date}}. <br> </p>
 
-        {% if session.user_id %} 
+        <header class="main-header">
+            <div class="main-stats">
+                <center>
+                    <em> Sivua on ladattu {{visits}} kertaa. Viimeiksi ladattu {{date}}.</em>
+                </center>
+            </div>
 
-        <a href="/new">uusi resepti</a> <br>  <!-- pitäis vaatia tiili --> 
+            <aside>
+                <nav>
+                    <ul class="main-navigation">
+                        <li class="navigation-button">
+                            <a href="/register">Luo tunnus</a>
+                        </li>
 
-        {% else %}
+                        {% if session.user_id %}
 
-        <p> sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit lisätä reseptejä.  </p>
+                        <li class="navigation-button">
+                            <a href="/logout">Kirjaudu ulos</a>
+                        </li> 
 
-        {% endif %}
+                        {% else %}
 
-        {% for recipe in recipes %}
-        {% if recipe.status == 1 %}
-        <p>
-            <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a> <br />
-            <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a>  ({{recipe.date}}) <br />
-        </p>
-        <hr />
-        {% endif %}
-        {% endfor %}
+                        <li class="navigation-button">
+                            <a href="/login">Kirjaudu sisään</a>
+                        </li>
 
-        <center><p>
-            <a href="/{{page-1}}">&lt;&lt;</a>
-            sivu {{page}}/{{page_count}}
-            <a href="{{page+1}}">&gt;&gt;</a>
-        </p></center>
+                        {% endif %}
+
+                        <li class="navigation-button">
+                            <a href="/search">Haku</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <h1 class="main-title"> Reseptisovellus </h1>
+        </header>
+
+        <main>
+
+            <div class="main-rightbox">
+                {% for message in get_flashed_messages() %}
+                    <span class="flash-message">
+                        <em>
+                            {{ message }}
+                        </em> 
+                    </span>
+                {% endfor %}
+
+                    <p>
+                        Täällä hetkeellä {{count}} reseptejä. 
+
+                        {% if session.user_id %} 
+
+                            <a href="/new">Uusi resepti</a> <br> 
+
+                        {% else %}
+
+                        Sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit lisätä reseptejä.
+
+                        {% endif %}
+                    </p>                                           
+            </div>
+
+            <div class="recipes">
+                <h2 class="main-subtitle">
+                    <center>
+                        Viimeisimmät reseptit:
+                    </center>
+                </h2>
+
+                {% for recipe in recipes %}
+                    <p>
+                        <a class="recipe-title" href="/recipe/{{recipe.id}}">{{recipe.title}}</a>
+                        <br>
+                        <span class="recipe-info">
+                            <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a>  ({{recipe.date}}) <br>
+                        </span>
+                    </p>
+                    <hr>
+                {% endfor %}
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <center>
+                <p>
+                    <a class="nav-arrows" href="/{{page-1}}">&lt;&lt;</a>
+                    Sivu {{page}}/{{page_count}}
+                    <a class="nav-arrows" href="{{page+1}}">&gt;&gt;</a>
+                </p>
+            </center>
+        </footer>
+
     </body>
-
 </html>

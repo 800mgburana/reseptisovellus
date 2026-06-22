@@ -1,106 +1,127 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="/static/main.css">
+    <head>
+        <link rel="stylesheet" href="/static/main.css">
+        <title>{{ recipe.title }}</title>
+    </head>
 
-    {% if recipe.status == 1 %}
+    <body>
+        {% if recipe.status == 1 %}
 
-        {% for message in get_flashed_messages() %}
-        <i><h3>{{ message }}</h3></i>
-        {% endfor %}
+            <header class="recipe-header">
+            </header>
 
-        <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a> ({{ recipe.date }})
+            <main class="main-recipe">
 
-        <head>
-            <title>{{ recipe.title }}</title>
-        </head>
+                {% for message in get_flashed_messages() %}
+                    <span class="flash-message">
+                        <em>
+                            {{ message }}
+                        </em> 
+                    </span>
+                {% endfor %}
 
-        <body>
+                <p>
+                Postaaja: <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a> 
+                ({{ recipe.date }})
+                <br>
 
-            <div><h2>{{ recipe.title }}</h2></div>
+                {% if session.user_id == recipe.user_id %}
+                    <a href="/edit/{{recipe.id}}">Muokkaa</a>
+                    <a href="/delete/{{recipe.id}}">Poista</a>
+                    <br>
+                {% endif %}
+                </p>
 
-            <p>
-            {% for tag in tags %}
+                <!-- они атк поу ебански выглядят... :(-->
+                <ul class="tag-list">
+                    {% for tag in tags %}
+                        <li class="tag">
+                            {{tag.name}}
+                        </li> 
+                    {% endfor %}
+                </ul>
 
-                <i>{{tag.name}}</i> 
+                <h1 class="recipe-title">{{ recipe.title }}</h1>
+
+
+                {% set list = recipe.ingredients.split(',') %}
+
+                <p>
+                    <h2 class="recipe-subtitles"> Ainesosat: </h2>
+                    <ul>
+                        {% for ingredient in list %} 
+                            <li> {{ingredient}} </li> 
+                        {% endfor %}
+                    </ul>
+                </p>
+                <br>
+
+                <h2 class="recipe-subtitles"> Ohjeet: </h2>
+                <div class="recipe-instructions">
+                    {{recipe.instructions}}
+                </div>
+                <br>
+             
+                <div>
+                    {{likes.count}} tykkäystä
+                </div>
+
+                <aside class="recipe-aside">
+                    <div>
+                        <form action="/like/{{recipe.id}}" method="post">
+                            <input type="submit" value="Tykkää <3">
+                        </form>
+                    </div>
+                </aside>
+
+                <hr>
+
+                {% if session.user_id %}
+                    <a href="/comment/{{recipe.id}}">Jätä kommentti </a>       
+                {% else %}
+                    <p> Sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
+                {% endif %}
+                <hr>
+
+                {% for comment in comments %}
+
+                    {% if session.user_id == comment.user_id %}
+                    <p class="comment-buttons">
+                            <a class="comment-button" href="/edit_comment/{{comment.id}}">Muokkaa</a> 
+                            <a class="comment-button" href="/delete_comment/{{comment.id}}">Poista</a>
+                    </p>
+                    {% endif %}
+                    
+                    <p> 
+                        <a href="/user/{{comment.user_id}}">{{comment.username}}</a>
+                        ({{comment.sent_at}}): <br>
+                    </p>
+
+                    <p class="comment-content">
+                    {{comment.content}} <br>   
+                    </p>         
+
+                    <hr>
 
             {% endfor %}
-            </p>
 
-            <div>
-            <h4> ainesosat </h4>
-            {% set list = recipe.ingredients.split(',') %}
+            </main>
 
-            {% for ingredient in list %} 
-
-                <li> {{ingredient}} </li> 
-
-            {% endfor %}
-            </div>
-            <br />
-
-            <h4> ohjeet </h4>
-            <div>
-            {{recipe.instructions}}
-            </div>
-            <br />
-        
-        </body>
-
-        {% if session.user_id == recipe.user_id %}
-        
-            <a href="/edit/{{recipe.id}}">muokkaa</a>
-            <a href="/delete/{{recipe.id}}">poista</a>
-            <br />
-
-        {% endif %}
-
-        <hr />
-
-        <p style="text-align:left;">
-            {{likes.count}} likes
-            <span style="float:right;">
-                <form action="/like/{{recipe.id}}" method="post">
-                    <input type="submit" value="tykkää <3">
-                </form>
+            <span class="main-footer">
+                <footer class="form-footer">
+                </footer>
             </span>
-        </p>
-
-        <hr />
-
-        {% if session.user_id %}
-
-            <a href="/comment/{{recipe.id}}"> jätä kommentti </a>       
-
-        {% else %}
-
-            <p> sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
-
-        {% endif %}
-
-        <hr />
-
-        <body>
-
-            {% for comment in comments %}
-
-             <a href="/user/{{comment.user_id}}">{{comment.username}}</a> ({{comment.sent_at}}) <br />
-            {{comment.content}} <br />
-
-            {% if session.user_id == recipe.user_id %}
-            <a href="/edit_comment/{{comment.id}}">muokkaa</a>  <a href="/delete_comment/{{comment.id}}">poista</a>
-            {% endif %}
-
-            <hr />
-
-            {% endfor %}
-
-        </body>
 
     {% else %}
 
-        reseptia ei löyty
-
+        <p>
+            Reseptia ei löyty
+        </p>
+        
     {% endif %}
+
+    </body>
 
 </html>

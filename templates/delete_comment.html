@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="/static/main.css">
+    <head>
+        <link rel="stylesheet" href="/static/main.css">
+        <title>Poista kommentti?</title>
+    </head>
 
-    <form action="/delete_comment/{{comment.id}}" method="post">
+    <body>
+        <header class="recipe-header">
+        </header>
 
-        <p>
-            haluatko varmasti poistaa kommentisi? :C
-        </p>
+        <form  class="registration-form" action="/delete_comment/{{comment.id}}" method="post">
+            <p>
+                Haluatko varmasti poistaa kommentisi? :(
+            </p>
 
-    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-    <input type="submit" name="continue" value="jatkaa"/>
-    <input type="submit" name="cancel" value="peruuta"/>
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
 
-    </form>
+            <p>
+            <input class="button" type="submit" name="continue" value="Jatkaa"/>
+            <input class="button" type="submit" name="cancel" value="Peruuta"/>
+            </p>
+        </form>
+
+        <span class="main-footer">
+            <footer class="form-footer">
+            </footer>
+        </span>
+    </body>
 
 </html>

@@ -1,11 +1,273 @@
 body {
     margin: auto;
     margin-top: 5em;
-    max-width: 30em;
+    max-width: 40em;
     font-family: Arial, Helvetica, sans-serif;
-    /* background-color: */
+    background-color: rgb(178, 232, 232);
 }
 
-div {
-    word-wrap: break-word;
+aside{
+    width: 40%;
+    padding-left: 0.5em;
+    margin-left: 0.5em;
+    margin-top: -1.75em;
+    float: right;
+}
+
+.recipe-aside{
+    width: 15%;
+    float: right;
+}
+
+main {
+    background-color: white;
+    margin-bottom: -2.2em;
+}
+
+.main-recipe{
+    padding: 1em 3em 5em 3em;
+    margin-top: -1em;
+}
+
+a:hover,
+a.nav-arrows:hover {
+    color: darkcyan;
+}
+
+.main-title {
+    display: block;
+    margin-left: 1rem;
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: 35px;
+}
+
+.main-header {
+    background-color: white;
+    padding-bottom: 1em;
+    border-radius: 50px 50px 0px 0px;
+    box-shadow: 0em 1em 0.5em lightgray inset;
+}
+
+.flash-message {
+    color: rgb(174, 21, 108);
+    text-decoration: underline;
+    font-size: 1.1em;
+}
+
+.form-flash-message{
+    background-color: white;
+    padding: 1em 0em 0em 3em;
+    outline: 1px soldi black;
+    margin-top: -1em;
+}
+
+.main-rightbox {
+    margin-left: 1rem;
+    overflow: auto;
+}
+
+.main-navigation {
+    padding: 5px;
+    margin-right: 1em;
+    margin-top: 2em;
+}
+
+.navigation-button {
+    list-style: none;
+    text-align: center;
+    border: 5px ridge black;
+    background: linear-gradient(180deg, white, lightgray);
+    padding: 5px;
+    width: auto;
+    height: auto;
+    border-radius: 3%;
+    margin-bottom: 18px;
+}
+
+.navigation-button:hover {
+    background: linear-gradient(180deg, lightgray, darkgray);
+}
+
+.main-stats,
+.form-header,
+.recipe-header {
+    color: white;
+    background: linear-gradient(to bottom,
+            lightgray 5%,
+            darkgray 10%,
+            black 75%);
+    border-radius: 70px 70px 0px 0px;
+    justify-content: space-evenly;
+    padding: 15px 10px 10px 10px;
+    margin-bottom: 1em;
+    border: 1px ridge lightgray;
+}
+
+.recipe-header{
+    padding: 20px;
+}
+
+.main-subtitle {
+    font-size: 20px;
+    margin-top: 4em;
+    /*text-decoration: underline dotted;*/
+}
+
+.recipes {
+    margin-left: 1rem;
+    margin-right: 1em;
+    display: block;
+}
+
+.recipe-title {
+    font-size: 20px;
+    text-decoration: underline dotted;
+}
+
+.recipe-info {
+    text-decoration: none;
+}
+
+.main-footer {
+    display: flex;
+    color: white;
+    background: linear-gradient(to bottom,
+            lightgray 5%,
+            darkgray 10%,
+            black 75%);
+    border-radius: 0px 0px 70px 70px;
+    justify-content: space-evenly;
+    padding: 1px;
+    margin-top: 2em;
+}
+
+.form-footer {
+    padding: 1em;
+}
+
+a.nav-arrows,
+a.nav-arrows:active,
+.nav-arrows:visited {
+    color: white;
+}
+
+.form-title {
+    font-size: 20px;
+    margin-left: 2em;
+}
+
+.registration-form {
+    background-color: white;
+    padding: 1em 0em 2em 3em;
+    margin-top: -1em;
+    margin-bottom: -2em;
+}
+
+.login-form{
+    background-color: white;
+    padding: 1em 0em 2em 3em;
+    margin-top: -1em;
+    margin-bottom: -2em;
+}
+
+.login-tip{
+    background-color: white;
+    padding: 3em 0em 0em 3em;
+    margin-top: -1em;
+}
+
+.search-form{
+    background-color: white;
+    padding: 1em 0em 2em 3em;
+    margin-top: -1em;
+    margin-bottom: -2em;
+}
+
+.search-results{
+    background-color: white;
+    padding: 0em 0em 4em 3em;
+    margin-bottom: -3em;
+}
+
+.search-title{
+    font-size: 25px;
+    padding: 0em 0em 2em 2em;
+    background-color: white;
+    margin-bottom: -1em;
+
+}
+
+.tag-list {
+    padding: 5px;
+    margin-right: 1em;
+    margin-top: 2em;
+    display: flex;
+    justify-content: first baseline;
+}
+
+.tag,
+.comment-button{
+    font-size: 12px;
+    list-style: none;
+    text-align: center;
+    border: 5px ridge black;
+    background: linear-gradient(180deg, white, lightgray);
+    padding: 5px;
+    width: 7em;
+    height: auto;
+    border-radius: 3%;
+    margin-right: 18px;
+    /* если текст слишком длинный ? */
+}
+
+.comment-button{
+   padding: 1px 3px 1px 3px;
+   border: 3px ridge black;
+   margin: 0px 0px 0px 5px;
+}
+
+/* почему то не работает ? */
+.comment-button:hover{
+    background-color: (180deg, lightgray, darkgray);
+}
+
+.recipe-title{
+    font-size: 25px;
+}
+
+.recipe-subtitles{
+    font-size: 20px;
+}
+
+.recipe-instructions{
+    margin-left: 1em;
+}
+
+.comment-buttons{
+    text-align: right;
+    margin-top: 15px;
+}
+
+.comment-content{
+    padding-left: 1em;
+}
+
+.user-profile-picutre{
+    float: right;
+    width: 200px;
+    height: 200px;
+    border: 5px ridge black;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: -3em 0em 1em 0em;
+}
+
+.right-button{
+    float: right;
+    margin-left: -100em;
+}
+
+.button{
+    margin-right: 1em;
 }

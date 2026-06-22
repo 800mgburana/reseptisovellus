@@ -7,6 +7,7 @@ import users
 import rcps
 import cmmnt
 import math
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -28,8 +29,9 @@ def mainpage(page=1):
     recipe_count = rcps.recipe_count()
     page_count = math.ceil(recipe_count/page_size)
     page_count = max(page_count, 1)
+    now = str(datetime.now())[:19]
 
-    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
+    db.execute("INSERT INTO visits (visited_at) VALUES (?)", [now])
     visit_ammount = (db.query("SELECT COUNT(*) FROM visits"))[0][0]
     last_visit = db.query("SELECT visited_at FROM visits ORDER BY visited_at DESC LIMIT 1")[0][0]
 
@@ -41,7 +43,7 @@ def mainpage(page=1):
     recipes = rcps.get_recipes(page, page_size)
     return render_template("mainpage.html", visits = visit_ammount, 
                             date = last_visit, recipes = recipes,
-                            page=page, page_count=page_count)
+                            page=page, page_count=page_count, count=recipe_count)
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
@@ -102,11 +104,11 @@ def register():
             password_hash = generate_password_hash(password1)
             db.execute("INSERT INTO users(username, password_hash) VALUES(?, ?)", 
                        (username, password_hash))
-            flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+            flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään.")
             return redirect("/")
 
         except sqlite3.IntegrityError:
-            flash("VIRHE: Valitsemasi tunnus on jo varattu")
+            flash("VIRHE: Valitsemasi tunnus on jo varattu.")
             filled = {"username": username}
             return render_template("register.html", filled=filled)
 
@@ -126,6 +128,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
+            flash("Olet kirjautunut sisään.")
             return redirect(next_page)
         
         else:

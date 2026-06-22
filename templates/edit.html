@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 <html>
 
+  <head>
     <link rel="stylesheet" href="/static/main.css">
+    <title>Reseptin muoakkaus</title>
+  </head>
 
-    <form action="/edit/{{ recipe.id }}" method="post">
+  <body>
+    {% if session.user_id == recipe.user_id %}
+
+      <header class="form-header">
+          <h1 class="form-title">Reseptin muokaus</h1>
+      </header>
+      
+      <form class="login-form" action="/edit/{{ recipe.id }}" method="post">
+
+        <p>
+          <label for="title">Otsikko:</label><br>
+          <textarea name="title" rows="1" cols="40" maxlength="50" required>{{ recipe.title }}</textarea>
+        </p>
+        
+        <p>
+          <label for="ingredients">Ainesosat:</label><br>
+          <textarea name="ingredients" rows="3" cols="40" maxlength="500" required>{{ recipe.ingredients }}</textarea>
+        </p>
+
+        <p>
+          <label for="instructions">Ohjeet:</label><br>
+          <textarea name="instructions" rows="10" cols="40" maxlength="1000" required>{{ recipe.instructions }}</textarea>
+        </p>
+
+        <p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
+        <input type="submit" value="Lähetä" />
+        </p>
+      </form>
+
+      <span class="main-footer">
+          <footer class="form-footer">
+          </footer>
+      </span>
+
+    {% else %}
 
       <p>
-        Otsikko: <br />
-        <textarea name="title" rows="1" cols="40">{{ recipe.title }}</textarea>
+        Et voi muokata tätä reseptiä.
       </p>
 
-      <p>
-        Ainesosat: <br />
-        <textarea name="ingredients" rows="3" cols="40">{{ recipe.ingredients }}</textarea>
-      </p>
-
-      <p>
-        Ohjeet: <br />
-        <textarea name="instructions" rows="3" cols="40">{{ recipe.instructions }}</textarea>
-      </p>
-
-      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
-      <input type="submit" value="Lähetä" />
-
-    </form>
+    {% endif%}
+  </body>
 
 </html>

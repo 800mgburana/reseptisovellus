@@ -1,5 +1,6 @@
 import db
 from flask import redirect
+from datetime import datetime
 
 def recipe_count():
     sql = """SELECT COUNT(id) as count
@@ -9,7 +10,7 @@ def recipe_count():
 def get_recipes(page, page_size):
     sql = """SELECT r.id, r.title, r.date, r.status, u.username, r.user_id
              FROM recipes r, users u
-             WHERE r.user_id = u.id
+             WHERE r.user_id = u.id AND r.status = 1
              ORDER BY r.date DESC
              LIMIT ? OFFSET ?"""
     limit = page_size
@@ -63,9 +64,11 @@ def search(query, tags):
     return db.query(sql, params)
 
 def new_post(title, ingredients, instructions, user_id, tags):
+    now = str(datetime.now())[:19]
+
     sql = """INSERT INTO recipes(title, ingredients, instructions, date, user_id) 
-             VALUES(?, ?, ?, datetime('now'), ?)"""
-    db.execute(sql, [title, ingredients, instructions, user_id]) 
+             VALUES(?, ?, ?, ?, ?)"""
+    db.execute(sql, [title, ingredients, instructions, now, user_id]) 
     
     recipe_id = db.last_insert_id()
 

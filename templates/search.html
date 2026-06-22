@@ -1,63 +1,78 @@
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="/static/main.css">
 
     <head>
-        <title> haku </title>
+        <link rel="stylesheet" href="/static/main.css">
+        <title> Haku </title>
     </head>
 
     <body>
-        <h1> haku </h1>
+        <header class="form-header">
+            <h1 class="form-title"> Haku </h1>
+        </header>
 
         {% for message in get_flashed_messages() %}
-        <i><h3>{{ message }}</h3></i>
+        <span class="flash-message">
+            <div class="form-flash-message">
+            <em>
+                {{ message }}
+            </em>
+            </div>
+        </span>
         {% endfor %}
 
-        <form action="/search" method="get">
+        <form class="search-form" action="/search" method="get">
             <p>
-                hakusana:
+                <label for="query">Hakusana:</label>
                 {% if query %}
-                <input type="text" name="query" value="{{query}}" maxlength="50" required/>
+                    <input type="text" name="query" value="{{query}}" maxlength="50" required/>
                 {% else %}
-                <input type="text" name="query"/>
+                    <input type="text" name="query"/>
                 {% endif %}
             </p>
 
+            <p>Sisältää tagit:</p>
+            <div>
+                <input type="checkbox" name="tags" value="vegetaarinen"
+                {% if "vegetaarinen" in tags %} checked {% endif %}/> Vegetaarinen
+
+                <input type="checkbox" name="tags" value="vegaaninen"
+                {% if "vegaaninen" in tags %} checked {% endif %}/> Vegaaninen
+
+                <input type="checkbox" name="tags" value="laktoositon"
+                {% if "laktoositon" in tags %} checked {% endif %}/> Laktoositon
+
+                <input type="checkbox" name="tags" value="gluteeniton"
+                {% if "gluteeniton" in tags %} checked {% endif %}/> Gluteeniton
+            </div>
+            
             <p>
-                sisältää tagit: <br />
-                    <input type="checkbox" name="tags" value="vegetaarinen"
-                    {% if "vegetaarinen" in tags %} checked {% endif %}/> vegetaarinen
-
-                    <input type="checkbox" name="tags" value="vegaaninen"
-                    {% if "vegaaninen" in tags %} checked {% endif %}/> vegaaninen
-
-                    <input type="checkbox" name="tags" value="laktoositon"
-                    {% if "laktoositon" in tags %} checked {% endif %}/> laktoositon
-
-                    <input type="checkbox" name="tags" value="gluteeniton"
-                    {% if "gluteeniton" in tags %} checked {% endif %}/> gluteeniton
+                <input type="submit" value="Hae"/>
             </p>
-            <input type="submit" value="hae"/>
         </form>
 
+        {% if query %}
+                <hr>
+                <h2 class="search-title"> Tulokset </h2>
 
-        {% if query or tags %}
-        <hr />
-        <h2> tulokset </h2>
-
-        <ul>
-            {% for result in results %}
-            <li>
-                <a href="/recipe/{{result.recipe_id}}">
-                    {{result.title}}
-                </a>
-                <br />
-                {{result.username}} ({{ result.date }})
-            </li>
-            {% endfor %}
-        </ul>
-
+                {% for result in results %}
+                    <p class="search-results">
+                        <a class="recipe-title" href="/recipe/{{result.recipe_id}}">{{result.title}}</a>
+                        <br>
+                        <span class="recipe-info">
+                            <a href="/user/{{result.user_id}}">
+                                {{result.username}}
+                            </a> 
+                            ({{ result.date }})
+                        </span>
+                    </p>
+                    <hr>
+                {% endfor %}
         {% endif %}
 
+        <span class="main-footer">
+            <footer class="form-footer">
+            </footer>
+        </span>
     </body>
 </html>
