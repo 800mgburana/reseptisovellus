@@ -10,6 +10,32 @@
         {% if recipe.status == 1 %}
 
             <header class="recipe-header">
+                <nav class="navigation-icons">
+                    <a class="navigation-icon" href="/" title="Kotisivuun">
+                        &#127968;
+                    </a>
+                    <a class="navigation-icon" href="/search" title="Haku">
+                        &#128269;
+                    </a>
+                    {% if session.user_id %}
+                        <a class="navigation-icon" href="/user/{{session.user_id}}" title="Käyttäjäsivuun">
+                            &#128100;
+                        </a>
+                        <a class="navigation-icon" href="/logout" title="Kirjaudu ulos">
+                            &#128694;
+                        </a>
+                        <a class="navigation-icon" href="/new" title="Uusi resepti">
+                            &#128221;
+                        </a>
+                    {% else %}
+                        <a class="navigation-icon" href="/login" title="Kirjaudu sisään">
+                            &#128100;
+                        </a>
+                    {% endif %}
+                    <a class="navigation-icon" href="/register" title="Luo tunnus">
+                        &#128587;
+                    </a>
+                </nav>
             </header>
 
             <main class="main-recipe">
@@ -52,7 +78,7 @@
                     <h2 class="recipe-subtitles"> Ainesosat: </h2>
                     <ul>
                         {% for ingredient in list %} 
-                            <li> {{ingredient}} </li> 
+                            <li class="recipe-ingredient"> {{ingredient}} </li> 
                         {% endfor %}
                     </ul>
                 </p>
@@ -60,7 +86,7 @@
 
                 <h2 class="recipe-subtitles"> Ohjeet: </h2>
                 <div class="recipe-instructions">
-                    {{recipe.instructions}}
+                    {{recipe.instructions | show_lines}}
                 </div>
                 <br>
              
@@ -71,7 +97,7 @@
                 <aside class="recipe-aside">
                     <div>
                         <form action="/like/{{recipe.id}}" method="post">
-                            <input type="submit" value="Tykkää <3">
+                            <input type="submit" value="♡ Tykkää">
                         </form>
                     </div>
                 </aside>
@@ -79,7 +105,7 @@
                 <hr>
 
                 {% if session.user_id %}
-                    <a href="/comment/{{recipe.id}}">Jätä kommentti </a>       
+                    <a href="/comment/{{recipe.id}}">Jätä kommentti &#128221;</a>       
                 {% else %}
                     <p> Sinun on <a href="/login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
                 {% endif %}
@@ -100,7 +126,7 @@
                     </p>
 
                     <p class="comment-content">
-                    {{comment.content}} <br>   
+                    {{comment.content | show_lines}} <br>   
                     </p>         
 
                     <hr>
@@ -109,10 +135,15 @@
 
             </main>
 
-            <span class="main-footer">
-                <footer class="form-footer">
-                </footer>
-            </span>
+            <footer class="main-footer">
+                <center>
+                    <p>
+                        <a class="nav-arrows" href="/recipe/{{recipe.id}}/{{page-1}}">&lt;&lt;</a>
+                        Sivu {{page}}/{{page_count}}
+                        <a class="nav-arrows" href="/recipe/{{recipe.id}}/{{page+1}}">&gt;&gt;</a>
+                    </p>
+                </center>
+            </footer>
 
     {% else %}
 

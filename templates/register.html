@@ -12,36 +12,48 @@
       <h1 class="form-title">Rekisteröinti</h1>
     </header>
 
-    {% for message in get_flashed_messages() %}
-      <span class="flash-message">
-        <div class="form-flash-message">
-          <em>
-            {{ message }}
-          </em>
-        </div>
-      </span>
-    {% endfor %}
+    <main>
+      {% for message in get_flashed_messages() %}
+        <span class="flash-message">
+          <div class="form-flash-message">
+            <em>
+              {{ message }}
+            </em>
+          </div>
+        </span>
+      {% endfor %}
 
-    <form class="registration-form" action="/register" method="post">
-      <p>
-        <label for="username">Tunnus:</label><br>
-        <input type="text" name="username" value="{{ filled.username }}" maxlength="16" required/>
-      </p>
+      <form class="registration-form" action="/register" method="post">
+        <p>
+          <label for="username">Tunnus:</label><br>
+          <input type="text" name="username" value="{{ filled.username }}" maxlength="16" required/>
+        </p>
 
-      <p>
-        <label for="password1">Salasana:</label><br>
-        <input type="password" name="password1" required/>
-      </p>
+        <p>
+          <label for="password1">Salasana:</label><br>
+          <input type="password" name="password1" required/>
+        </p>
 
-      <p>
-        <label for="password2">Salasana uudestaan:</label><br>
-        <input type="password" name="password2" required/>
-      </p>
+        <p>
+          <label for="password2">Salasana uudestaan:</label><br>
+          <input type="password" name="password2" required/>
+        </p>
 
-      <p>
-        <input type="submit" value="Luo tunnus"/>
+        {% if next_page %}
+          <input type="hidden" name="next_page" value="{{next_page}}"/>
+        {% else %}
+          <input type="hidden" name="next_page" value="/"/>
+        {% endif %}
+
+        <p>
+          <input type="submit" value="Luo tunnus"/>
+        </p>
+      </form>
+
+      <p class="cancel-button">
+        <a  href="{{next_page}}"><button>Peruuta</button></a>
       </p>
-    </form>
+    </main>
 
     <span class="main-footer">
       <footer class="form-footer">

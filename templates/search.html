@@ -8,71 +8,105 @@
 
     <body>
         <header class="form-header">
-            <h1 class="form-title"> Haku </h1>
+            <nav class="navigation-icons">
+                <a class="navigation-icon" href="/" title="Kotisivuun">
+                    &#127968;
+                </a>
+                {% if session.user_id %}
+                    <a class="navigation-icon" href="/user/{{session.user_id}}" title="Käyttäjäsivuun">
+                        &#128100;
+                    </a>
+                    <a class="navigation-icon" href="/logout" title="Kirjaudu ulos">
+                        &#128694;
+                    </a>
+                    <a class="navigation-icon" href="/new" title="Uusi resepti">
+                        &#128221;
+                    </a>
+                {% else %}
+                    <a class="navigation-icon" href="/login" title="Kirjaudu sisään">
+                        &#128100;
+                    </a>
+                {% endif %}
+                <a class="navigation-icon" href="/register" title="Luo tunnus">
+                    &#128587;
+                </a>
+            </nav>
+            <h1 class="search-form-title"> Haku </h1>
         </header>
 
-        {% for message in get_flashed_messages() %}
-        <span class="flash-message">
-            <div class="form-flash-message">
-            <em>
-                {{ message }}
-            </em>
-            </div>
-        </span>
-        {% endfor %}
+        <main>
+            {% for message in get_flashed_messages() %}
+            <span class="flash-message">
+                <div class="form-flash-message">
+                <em>
+                    {{ message }}
+                </em>
+                </div>
+            </span>
+            {% endfor %}
 
-        <form class="search-form" action="/search" method="get">
-            <p>
-                <label for="query">Hakusana:</label>
-                {% if query %}
-                    <input type="text" name="query" value="{{query}}" maxlength="50" required/>
-                {% else %}
-                    <input type="text" name="query"/>
-                {% endif %}
-            </p>
+            <form class="search-form" action="/search" method="get">
+                <p>
+                    <label for="query">Hakusana:</label>
+                    {% if query %}
+                        <input type="text" name="query" value="{{query}}" maxlength="50" required/>
+                    {% else %}
+                        <input type="text" name="query"/>
+                    {% endif %}
+                </p>
 
-            <p>Sisältää tagit:</p>
-            <div>
-                <input type="checkbox" name="tags" value="vegetaarinen"
-                {% if "vegetaarinen" in tags %} checked {% endif %}/> Vegetaarinen
+                <p>Sisältää tagit:</p>
+                <div>
+                    <input type="checkbox" name="tags" value="vegetaarinen"
+                    {% if "vegetaarinen" in tags %} checked {% endif %}/> Vegetaarinen
 
-                <input type="checkbox" name="tags" value="vegaaninen"
-                {% if "vegaaninen" in tags %} checked {% endif %}/> Vegaaninen
+                    <input type="checkbox" name="tags" value="vegaaninen"
+                    {% if "vegaaninen" in tags %} checked {% endif %}/> Vegaaninen
 
-                <input type="checkbox" name="tags" value="laktoositon"
-                {% if "laktoositon" in tags %} checked {% endif %}/> Laktoositon
+                    <input type="checkbox" name="tags" value="laktoositon"
+                    {% if "laktoositon" in tags %} checked {% endif %}/> Laktoositon
 
-                <input type="checkbox" name="tags" value="gluteeniton"
-                {% if "gluteeniton" in tags %} checked {% endif %}/> Gluteeniton
-            </div>
-            
-            <p>
-                <input type="submit" value="Hae"/>
-            </p>
-        </form>
+                    <input type="checkbox" name="tags" value="gluteeniton"
+                    {% if "gluteeniton" in tags %} checked {% endif %}/> Gluteeniton
+                </div>
+                
+                <p>
+                    <input type="submit" value="Hae"/>
+                </p>
+            </form>
 
-        {% if query %}
-                <hr>
-                <h2 class="search-title"> Tulokset </h2>
-
-                {% for result in results %}
-                    <p class="search-results">
-                        <a class="recipe-title" href="/recipe/{{result.recipe_id}}">{{result.title}}</a>
-                        <br>
-                        <span class="recipe-info">
-                            <a href="/user/{{result.user_id}}">
-                                {{result.username}}
-                            </a> 
-                            ({{ result.date }})
-                        </span>
-                    </p>
+            {% if query %}
                     <hr>
-                {% endfor %}
-        {% endif %}
+                    <h2 class="search-title"> Tulokset </h2>
 
-        <span class="main-footer">
-            <footer class="form-footer">
-            </footer>
-        </span>
+                    {% for result in results %}
+                        <p class="search-results">
+                            <a class="recipe-title" href="/recipe/{{result.recipe_id}}">{{result.title}}</a>
+                            <br>
+                            <span class="recipe-info">
+                                <a href="/user/{{result.user_id}}">
+                                    {{result.username}}
+                                </a> 
+                                ({{ result.date }})
+                            </span>
+                        </p>
+                        <hr>
+                    {% endfor %}
+            {% endif %}
+        </main>
+
+       <footer class="main-footer">
+            <center>
+                <p>
+                    <a href="/search?query={{query}}{% for tag in tags %}&tags={{tag}}{% endfor %}&page={{page - 1}}">
+                        &lt;&lt;
+                    </a>
+                    Sivu {{page}}/{{page_count}}
+                    <a href="/search?query={{query}}{% for tag in tags %}&tags={{tag}}{% endfor %}&page={{page + 1}}">
+                        &gt;&gt;
+                    </a>
+                </p>
+            </center>
+        </footer>
     </body>
 </html>

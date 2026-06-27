@@ -11,7 +11,7 @@
         <header class="main-header">
             <div class="main-stats">
                 <center>
-                    <em> Sivua on ladattu {{visits}} kertaa. Viimeiksi ladattu {{date}}.</em>
+                    <em>Sivua on ladattu {{visits}} kertaa. Viimeiksi ladattu {{date}}.</em>
                 </center>
             </div>
 
@@ -19,25 +19,29 @@
                 <nav>
                     <ul class="main-navigation">
                         <li class="navigation-button">
-                            <a href="/register">Luo tunnus</a>
+                            <a href="/register">Luo tunnus &#128587;</a>
                         </li>
 
                         {% if session.user_id %}
 
                         <li class="navigation-button">
-                            <a href="/logout">Kirjaudu ulos</a>
+                            <a href="/logout">Kirjaudu ulos &#128694;</a>
                         </li> 
+
+                        <li class="navigation-button">
+                            <a href="/user/{{session.user_id}}">Käyttäjäsivuun &#128100;</a>
+                        </li>
 
                         {% else %}
 
                         <li class="navigation-button">
-                            <a href="/login">Kirjaudu sisään</a>
+                            <a href="/login">Kirjaudu sisään &#128100;</a>
                         </li>
 
                         {% endif %}
 
                         <li class="navigation-button">
-                            <a href="/search">Haku</a>
+                            <a href="/search">Haku &#128269;</a>
                         </li>
                     </ul>
                 </nav>
@@ -62,7 +66,7 @@
 
                         {% if session.user_id %} 
 
-                            <a href="/new">Uusi resepti</a> <br> 
+                            <a href="/new">Uusi resepti &#128221;</a> <br> 
 
                         {% else %}
 
@@ -72,24 +76,28 @@
                     </p>                                           
             </div>
 
-            <div class="recipes">
-                <h2 class="main-subtitle">
-                    <center>
-                        Viimeisimmät reseptit:
-                    </center>
-                </h2>
+                <div class="recipes">
 
-                {% for recipe in recipes %}
-                    <p>
-                        <a class="recipe-title" href="/recipe/{{recipe.id}}">{{recipe.title}}</a>
-                        <br>
-                        <span class="recipe-info">
-                            <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a>  ({{recipe.date}}) <br>
-                        </span>
-                    </p>
-                    <hr>
-                {% endfor %}
-            </div>
+                    {% if count > 0 %}
+                        <h2 class="main-subtitle">
+                            <center>
+                                Viimeisimmät reseptit:
+                            </center>
+                        </h2>
+                    {% endif %}
+
+                    {% for recipe in recipes %}
+                        <p>
+                            <a class="recipe-title" href="/recipe/{{recipe.id}}">{{recipe.title}}</a>
+                            <br>
+                            <span class="recipe-info">
+                                <a href="/user/{{recipe.user_id}}">{{recipe.username}}</a>  ({{recipe.date}}) <br>
+                            </span>
+                        </p>
+                        <hr>
+                    {% endfor %}
+                </div>
+            
         </main>
 
         <footer class="main-footer">
@@ -97,7 +105,7 @@
                 <p>
                     <a class="nav-arrows" href="/{{page-1}}">&lt;&lt;</a>
                     Sivu {{page}}/{{page_count}}
-                    <a class="nav-arrows" href="{{page+1}}">&gt;&gt;</a>
+                    <a class="nav-arrows" href="/{{page+1}}">&gt;&gt;</a>
                 </p>
             </center>
         </footer>

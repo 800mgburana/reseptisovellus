@@ -13,38 +13,44 @@
         <h1 class="form-title">Reseptin luominen</h1>
       </header>
 
-      <form class="login-form" action="/new" method="post">
-        <p>
-          <label for="title">Otsikko:</label><br>
-          <textarea name="title" rows="1" cols="40" maxlength="50" required></textarea>
+      <main>
+        <form class="login-form" action="/new" method="post">
+          <p>
+            <label for="title">Otsikko:</label><br>
+            <textarea name="title" rows="1" cols="40" maxlength="50" required></textarea>
+          </p>
+
+          <p>
+            <label for="ingredients">Ainesosat (pilkulla erotettuna):</label><br>
+            <textarea name="ingredients" rows="3" cols="40" maxlength="500" required></textarea>
+          </p>
+
+          <p>
+            <label for="instructions">Ohjeet:</label><br>
+            <textarea name="instructions" rows="10" cols="40" maxlength="1000" required></textarea>
+          </p>
+
+          <p> Valitse tagit: </p>
+
+          <div>
+            <input type="checkbox" name="tags" value="vegetaarinen"/> vegetaarinen
+            <input type="checkbox" name="tags" value="vegaaninen"/> vegaaninen
+            <input type="checkbox" name="tags" value="laktoositon"/> laktoositon
+            <input type="checkbox" name="tags" value="gluteeniton"/> gluteeniton
+          </div>
+
+          <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
+
+          <p>
+            <input type="submit" value="Lähetä" />
+          </p>
+          
+        </form>
+
+        <p class="cancel-button">
+          <a  href="{{next_page}}"><button>Peruuta</button></a>
         </p>
-
-        <p>
-          <label for="ingredients">Ainesosat (pilkulla erotettuna):</label><br>
-          <textarea name="ingredients" rows="3" cols="40" maxlength="500" required></textarea>
-        </p>
-
-        <p>
-          <label for="instructions">Ohjeet:</label><br>
-          <textarea name="instructions" rows="10" cols="40" maxlength="1000" required></textarea>
-        </p>
-
-        <p> Valitse tagit: </p>
-
-        <div>
-          <input type="checkbox" name="tags" value="vegetaarinen"/> vegetaarinen
-          <input type="checkbox" name="tags" value="vegaaninen"/> vegaaninen
-          <input type="checkbox" name="tags" value="laktoositon"/> laktoositon
-          <input type="checkbox" name="tags" value="gluteeniton"/> gluteeniton
-        </div>
-
-        <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-
-        <p>
-          <input type="submit" value="Lähetä" />
-        </p>
-        
-      </form>
+      </main>
 
       <span class="main-footer">
         <footer class="form-footer">

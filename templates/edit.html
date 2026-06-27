@@ -12,29 +12,47 @@
       <header class="form-header">
           <h1 class="form-title">Reseptin muokaus</h1>
       </header>
-      
-      <form class="login-form" action="/edit/{{ recipe.id }}" method="post">
 
-        <p>
-          <label for="title">Otsikko:</label><br>
-          <textarea name="title" rows="1" cols="40" maxlength="50" required>{{ recipe.title }}</textarea>
-        </p>
-        
-        <p>
-          <label for="ingredients">Ainesosat:</label><br>
-          <textarea name="ingredients" rows="3" cols="40" maxlength="500" required>{{ recipe.ingredients }}</textarea>
-        </p>
+      <main>
+        <form class="login-form" action="/edit/{{ recipe.id }}" method="post">
 
-        <p>
-          <label for="instructions">Ohjeet:</label><br>
-          <textarea name="instructions" rows="10" cols="40" maxlength="1000" required>{{ recipe.instructions }}</textarea>
-        </p>
+          <p>
+            <label for="title">Otsikko:</label><br>
+            <textarea name="title" rows="1" cols="40" maxlength="50" required>{{ recipe.title }}</textarea>
+          </p>
+          
+          <p>
+            <label for="ingredients">Ainesosat:</label><br>
+            <textarea name="ingredients" rows="3" cols="40" maxlength="500" required>{{ recipe.ingredients }}</textarea>
+          </p>
 
-        <p>
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
-        <input type="submit" value="Lähetä" />
+          <p>
+            <label for="instructions">Ohjeet:</label><br>
+            <textarea name="instructions" rows="10" cols="40" maxlength="1000" required>{{ recipe.instructions }}</textarea>
+          </p>
+
+          <p> Valitse tagit: </p>
+
+          <div>
+            {% for tag in ["vegetaarinen", "vegaaninen", "laktoositon", "gluteeniton"] %}
+              {% if tag in tags %}
+                <input type="checkbox" name="tags" value={{tag}} checked/> {{tag}}
+              {% else %}
+                <input type="checkbox" name="tags" value={{tag}}/> {{tag}}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <p>
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
+          <input type="submit" value="Lähetä" />
+          </p>
+        </form>
+
+        <p class="cancel-button">
+            <a  href="{{next_page}}"><button>Peruuta</button></a>
         </p>
-      </form>
+      </main>
 
       <span class="main-footer">
           <footer class="form-footer">

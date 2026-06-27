@@ -10,18 +10,34 @@
         <header class="form-header">
             <h1 class="form-title">Lisää profiilikuva</h1>
         </header>
-    
-        <p class="login-tip">Lähetä jpg-tiedosto, jonka koko on enitään 100kt.</p>
 
-        <form class="registration-form" action="/add_image" method="post" enctype="multipart/form-data">
-            <p>
-                <label for="image"> Kuva: </label>
-                <input type="file" name="image" accept=".jpg"/>
-            </p>
+        <main class="forum-main">
+            {% for message in get_flashed_messages() %}
+                <div class="login-tip">
+                    <span class="flash-message">
+                        <em>
+                            {{ message }}
+                        </em> 
+                    </span>
+                </div>
+            {% endfor %}
         
-            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-            <input type="submit" value="Lähetä"/>
-        </form>
+            <p class="login-tip">Lähetä jpg-tiedosto, jonka koko on enitään 100kt.</p>
+
+            <form class="registration-form" action="/add_image" method="post" enctype="multipart/form-data">
+                <p>
+                    <label for="image"> Kuva: </label>
+                    <input type="file" name="image" accept=".jpg"/>
+                </p>
+            
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
+                <input type="submit" value="Lähetä"/>
+            </form>
+
+            <p class="cancel-button">
+                <a  href="{{next_page}}"><button>Peruuta</button></a>
+            </p>
+        </main>
 
         <span class="main-footer">
             <footer class="form-footer">

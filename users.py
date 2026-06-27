@@ -21,13 +21,24 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
-def get_recipes(user_id):
+def get_recipes(user_id, page, page_size):
     sql = """SELECT id, title, date
              FROM recipes
              WHERE user_id = ?
-             ORDER BY date DESC"""
+             AND status = 1
+             ORDER BY date DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page-1)
     
-    return db.query(sql, [user_id])
+    return db.query(sql, [user_id, limit, offset])
+
+def get_recipe_count(user_id):
+    sql = """SELECT COUNT(id) as count
+             FROM recipes 
+             WHERE status = 1
+             AND user_id = ?"""
+    return db.query(sql, [user_id])[0]["count"]
 
 def update_image(user_id, image):
     sql = "UPDATE users SET image = ? WHERE id = ?"

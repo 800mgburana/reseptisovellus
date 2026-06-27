@@ -27,7 +27,8 @@ CREATE TABLE tags(
 
 CREATE TABLE recipe_tags(
     recipe_id INTEGER REFERENCES recipes,
-    tag_id INTEGER REFERENCES tags
+    tag_id INTEGER REFERENCES tags,
+    status DEFAULT 1
 );
 
 CREATE TABLE comments(
@@ -42,5 +43,5 @@ CREATE TABLE comments(
 CREATE TABLE likes(
     recipe_id INTEGER REFERENCES recipes,
     user_id INTEGER REFERENCES users,
-    PRIMARY KEY (user_id, recipe_id)
+    status INTEGER DEFAULT 1
 );

@@ -12,18 +12,24 @@
                 <h1 class="form-title"> Komentin muoakkaus </h1>
         </header>
 
-        <form class="search-form" action="/edit_comment/{{comment.id}}" method="POST">
-            <p>
-                <label for="comment">Kommenttisi:</label> <br>
-                <textarea name="comment" rows="3" cols="40" maxlength="300">{{comment.content}}</textarea>            
-            </p>
+        <main>
+            <form class="search-form" action="/edit_comment/{{comment.id}}" method="POST">
+                <p>
+                    <label for="comment">Kommenttisi:</label> <br>
+                    <textarea name="comment" rows="3" cols="40" maxlength="300">{{comment.content}}</textarea>            
+                </p>
 
-            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
 
-            <p>
-                <input type="submit" value="Lähetä" />
+                <p>
+                    <input type="submit" value="Lähetä" />
+                </p>
+            </form>
+
+            <p class="cancel-button">
+                <a  href="{{next_page}}"><button>Peruuta</button></a>
             </p>
-        </form>
+        </main>
 
         <span class="main-footer">
             <footer class="form-footer">

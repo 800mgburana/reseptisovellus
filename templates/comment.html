@@ -12,27 +12,34 @@
             <h1 class="form-title"> Komentin kirjoittaminen </h1>
         </header>
 
-        {% if session.user_id %}
+        <main>
+            {% if session.user_id %}
 
-            <form class="search-form" action="/comment/{{recipe.id}}" method="POST">
-                <p>
-                    <label for="comment">Kommenttisi:</label> <br>
-                    <textarea name="comment" rows="3" cols="40" maxlength="300" required></textarea>
+                <form class="search-form" action="/comment/{{recipe.id}}" method="POST">
+                    <p>
+                        <label for="comment">Kommenttisi:</label> <br>
+                        <textarea name="comment" rows="3" cols="40" maxlength="300" required></textarea>
+                    </p>
+
+                    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
+
+                    <p>
+                        <input type="submit" value="Lähetä" />
+                    </p>
+                </form>
+
+            {% else %}
+
+            <p> Sinun on <a href="login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
+
+            {% endif %}
+
+                <p class="cancel-button">
+                    <a  href="{{next_page}}"><button>Peruuta</button></a>
                 </p>
+        </main>
 
-                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}"/>
-
-                <p>
-                    <input type="submit" value="Lähetä" />
-                </p>
-            </form>
-
-        {% else %}
-
-        <p> Sinun on <a href="login">kirjauduttava sisään</a>, jotta voit kommentoida.  </p>
-
-        {% endif %}
-
+        
         <span class="main-footer">
             <footer class="form-footer">
             </footer>

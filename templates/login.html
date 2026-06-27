@@ -12,40 +12,52 @@
       <h1 class="form-title">Kirjautuminen</h1>
     </header>
 
-    {% for message in get_flashed_messages() %}
-      <span class="flash-message">
-        <div class="form-flash-message">
-          <em>
-            {{ message }}
-          </em>
-        </div>
-      </span>
-    {% endfor %}
+    <main>
+      {% for message in get_flashed_messages() %}
+        <span class="flash-message">
+          <div class="form-flash-message">
+            <em>
+              {{ message }}
+            </em>
+          </div>
+        </span>
+      {% endfor %}
 
-    {% if session.user_id %}
-  
-      <p class="login-form"> 
-        <br>
-        Olet kirjautunut sisään. <a href="/logout">Kirjaudu ulos</a> 
-      </p>
-
-    {% else %}
-
-      <p class="login-tip"> Jos sinulla ei vielä ole tiliä, voit luoda sen <a href="/register">täällä</a> </p>
+      {% if session.user_id %}
     
-      <form class="login-form" action="/login" method="post">
-        <p>
-          <label for="username">Tunnus:</label> <br>
-          <input type="text" name="username" />
+        <p class="login-form"> 
+          <br>
+          Olet kirjautunut sisään. <a href="/logout">Kirjaudu ulos</a> 
         </p>
 
-        <p>
-          <label for="password">Salasana:</label> <br>
-          <input type="password" name="password" />
-        </p>
+      {% else %}
 
-        <input type="submit" value="Kirjaudu" />
-      </form>
+        <p class="login-tip"> Jos sinulla ei vielä ole tiliä, voit luoda sen <a href="/register">täällä</a> </p>
+      
+        <form class="login-form" action="/login" method="post">
+          <p>
+            <label for="username">Tunnus:</label> <br>
+            <input type="text" name="username" />
+          </p>
+
+          <p>
+            <label for="password">Salasana:</label> <br>
+            <input type="password" name="password" />
+          </p>
+
+          {% if next_page %}
+            <input type="hidden" name="next_page" value="{{ next_page }}" />
+          {% else %}
+            <input type="hidden" name="next_page" value="/" />
+          {% endif %}
+
+          <input type="submit" value="Kirjaudu" />
+        </form>
+
+        <p class="cancel-button">
+          <a  href="{{next_page}}"><button>Peruuta</button></a>
+        </p>
+      </main>
 
     {% endif %}
 

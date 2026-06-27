@@ -82,7 +82,7 @@ a.nav-arrows:hover {
     width: auto;
     height: auto;
     border-radius: 3%;
-    margin-bottom: 18px;
+    margin-bottom: 5px;
 }
 
 .navigation-button:hover {
@@ -110,19 +110,25 @@ a.nav-arrows:hover {
 
 .main-subtitle {
     font-size: 20px;
-    margin-top: 4em;
+    margin-top: 4em;word-break: break-word;
     /*text-decoration: underline dotted;*/
 }
 
 .recipes {
     margin-left: 1rem;
     margin-right: 1em;
+    padding-bottom: 6em;
     display: block;
 }
 
 .recipe-title {
     font-size: 20px;
     text-decoration: underline dotted;
+    word-break: break-word;
+}
+
+.recipe-ingredient {
+    word-break: break-word;
 }
 
 .recipe-info {
@@ -155,6 +161,11 @@ a.nav-arrows:active,
 .form-title {
     font-size: 20px;
     margin-left: 2em;
+}
+
+.search-form-title{
+    font-size: 20px;
+    margin-left: 2.5em;
 }
 
 .registration-form {
@@ -242,6 +253,7 @@ a.nav-arrows:active,
 
 .recipe-instructions{
     margin-left: 1em;
+    word-break: break-word;
 }
 
 .comment-buttons{
@@ -251,12 +263,13 @@ a.nav-arrows:active,
 
 .comment-content{
     padding-left: 1em;
+    word-break: break-word;
 }
 
 .user-profile-picutre{
     float: right;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border: 5px ridge black;
     background-size: contain;
     background-repeat: no-repeat;
@@ -270,4 +283,23 @@ a.nav-arrows:active,
 
 .button{
     margin-right: 1em;
+}
+
+.navigation-icons{
+    padding-left: 3em;
+}
+
+.navigation-icon{
+    text-decoration: none;
+}
+
+.title-username{
+    font-size: 23px;
+}
+
+.cancel-button{
+    padding-left: 3em;
+    padding-bottom: 2em;
+    margin-top: 1em;
+    background-color: white;
 }
