@@ -31,3 +31,6 @@ Voit käynnistää sovelluksen näin:
 ```
 $ APP_SECRET_KEY="sinun salainen avain" flask run
 ```
+## Suuri tietomäärä
+
+Sovellusta on testattu suurella tietomäärällä. Testi suoritettiin seed.py-tiedostolla. Sovellus toimii hyvin, vaikka tietomäärä on suuri. Home-, käyttäjä-, resepti- sekä hakusivuilla on sivutus. Se huomattavasti helpottaa sovelluksen käyttöä.
