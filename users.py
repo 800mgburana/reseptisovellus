@@ -1,6 +1,5 @@
-import sqlite3
-import db
 from werkzeug.security import check_password_hash
+import db
 
 def check_login(username, password):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
@@ -10,14 +9,14 @@ def check_login(username, password):
         user_id, password_hash = result[0]
         if check_password_hash(password_hash, password):
             return user_id
-        
+
     return None
 
 def get_user(user_id):
     sql = """SELECT id, username, image IS NOT NULL has_image
              FROM users
              WHERE id = ?"""
-    
+
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
@@ -30,7 +29,7 @@ def get_recipes(user_id, page, page_size):
              LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page-1)
-    
+
     return db.query(sql, [user_id, limit, offset])
 
 def get_recipe_count(user_id):

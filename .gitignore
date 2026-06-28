@@ -2,4 +2,3 @@ __pycache__
 venv
 todo.txt
 database.db
-seed.py

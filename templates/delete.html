@@ -7,7 +7,33 @@
     </head>
 
     <body>
-        <header class="recipe-header">
+        <header class="form-header">
+            <nav class="navigation-icons">
+                <a class="navigation-icon" href="/" title="Kotisivuun">
+                    &#127968;
+                </a>
+                <a class="navigation-icon" href="/search" title="Haku">
+                &#128269;
+                </a>
+                {% if session.user_id %}
+                    <a class="navigation-icon" href="/user/{{session.user_id}}" title="Käyttäjäsivuun">
+                        &#128100;
+                    </a>
+                    <a class="navigation-icon" href="/logout" title="Kirjaudu ulos">
+                        &#128694;
+                    </a>
+                    <a class="navigation-icon" href="/new" title="Uusi resepti">
+                        &#128221;
+                    </a>
+                {% else %}
+                    <a class="navigation-icon" href="/login" title="Kirjaudu sisään">
+                        &#128100;
+                    </a>
+                {% endif %}
+                <a class="navigation-icon" href="/register" title="Luo tunnus">
+                    &#128587;
+                </a>
+            </nav>
         </header>
 
         <form class="registration-form" action="/delete/{{recipe.id}}" method="post">

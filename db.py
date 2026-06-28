@@ -1,6 +1,5 @@
 import sqlite3
 from flask import g
-from werkzeug.security import check_password_hash
 
 def get_connection():
     con = sqlite3.connect("database.db")
@@ -16,12 +15,10 @@ def execute(sql, params=[]):
     con.close()
 
 def last_insert_id():
-    return g.last_insert_id    
-    
+    return g.last_insert_id
+
 def query(sql, params=[]):
     con = get_connection()
     result = con.execute(sql, params).fetchall()
     con.close()
     return result
-    
-
